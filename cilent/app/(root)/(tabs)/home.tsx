@@ -9,6 +9,7 @@ import { icons } from '@/constants';
 import search from './search';
 import SearchField from '@/components/SearchField';
 import { FeaturedCard, Card } from '@/components/Card'
+import LoadingModal from '@/components/LoadingModal';
 
 
 const Page = () => {
@@ -24,6 +25,10 @@ const Page = () => {
 
   return (
     <SafeAreaView className='flex bg-gray-100 h-full'>
+      <LoadingModal 
+      
+      visible={true}
+      />
       <ScrollView>
 
 

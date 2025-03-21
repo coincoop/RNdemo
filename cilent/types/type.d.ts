@@ -136,3 +136,8 @@ declare interface DriverCardProps {
     selected: number;
     setSelected: () => void;
 }
+
+declare interface LoadingModalProps{
+    visible: boolean,
+    mess?: string,
+}
