@@ -1,5 +1,5 @@
 import { View, Text, Image, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 import InputField from '@/components/InputField'
@@ -10,12 +10,17 @@ import { useAuth, useSignUp } from '@clerk/clerk-expo'
 import { ReactNativeModal } from 'react-native-modal'
 import { images } from '@/constants'
 import { fetchAPI } from '@/lib/fetch'
+import LoadingModal from '@/components/LoadingModal'
+import authenticationAPI from '@/apis/authApi'
+import { Validate } from '@/utils/validate'
 
 const SignUp = () => {
-   const { signOut } = useAuth();
+  const { signOut } = useAuth();
+  const [isLoading, setIsLoading] = useState(false)
   const { isLoaded, signUp } = useSignUp()
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const router = useRouter()
+  const [errorMessage, setErrorMessage] = useState('')
   const [verification, setVerification] = React.useState({
     state: "default",
     error: "",
@@ -29,73 +34,114 @@ const SignUp = () => {
     confirmPassword: ''
   })
 
-  // Handle submission of sign-up form
-  const onSignUpPress = async () => {
-    if (!isLoaded) return
-    if (form.password !== form.confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
+  useEffect(() => {
+    if (form.name || form.email || form.password) {
+      setErrorMessage('')
     }
+  }, [form.name, form.email, form.password])
 
-    // Start sign-up process using email and password provided
-    try {
-      await signUp.create({
-        emailAddress: form.email,
-        password: form.password,
-      })
+  // clerk  // Handle submission of sign-up form
+  // const onSignUpPress = async () => {
+  //   if (!isLoaded) return
+  //   if (form.password !== form.confirmPassword) {
+  //     Alert.alert('Error', 'Passwords do not match');
+  //     return;
+  //   }
 
-      // Send user an email with verification code
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+  //   // Start sign-up process using email and password provided
+  //   try {
+  //     await signUp.create({
+  //       emailAddress: form.email,
+  //       password: form.password,
+  //     })
 
-      // and capture OTP code
-      setVerification({
-        ...verification,
-        state: 'pending',
-      })
-    } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.log(JSON.stringify(err, null, 2));
-      Alert.alert("Error", err.errors[0].longMessage);
+  //     // Send user an email with verification code
+  //     await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
 
-    }
-  }
+  //     // and capture OTP code
+  //     setVerification({
+  //       ...verification,
+  //       state: 'pending',
+  //     })
+  //   } catch (err: any) {
+  //     // See https://clerk.com/docs/custom-flows/error-handling
+  //     // for more info on error handling
+  //     console.log(JSON.stringify(err, null, 2));
+  //     Alert.alert("Error", err.errors[0].longMessage);
 
-  // Handle submission of verification form
-  const onVerifyPress = async () => {
-    if (!isLoaded) return
+  //   }
+  // }
 
-    try {
-      // Use the code the user provided to attempt verification
-      const signUpAttempt = await signUp.attemptEmailAddressVerification({
-        code: verification.code,
-      })
+  // // Handle submission of verification form
+  // const onVerifyPress = async () => {
+  //   if (!isLoaded) return
 
-      // If verification was completed, set the session to active
-      if (signUpAttempt.status === 'complete') {
-        //TODO create a db user
-        await fetchAPI("/(api)/user",{
-          method: "POST",
-          body: JSON.stringify({
-            name: form.name,
-            email: form.email,
-            clerkId: signUpAttempt.createdUserId
-          })
-        })
+  //   try {
+  //     // Use the code the user provided to attempt verification
+  //     const signUpAttempt = await signUp.attemptEmailAddressVerification({
+  //       code: verification.code,
+  //     })
 
-        // await setActive({ session: signUpAttempt.createdSessionId })
+  //     // If verification was completed, set the session to active
+  //     if (signUpAttempt.status === 'complete') {
+  //       //TODO create a db user
+  //       await fetchAPI("/(api)/user",{
+  //         method: "POST",
+  //         body: JSON.stringify({
+  //           name: form.name,
+  //           email: form.email,
+  //           clerkId: signUpAttempt.createdUserId
+  //         })
+  //       })
 
-        setVerification({ ...verification, state: "success" })
-        setShowSuccessModal(true);
+  //       // await setActive({ session: signUpAttempt.createdSessionId })
+
+  //       setVerification({ ...verification, state: "success" })
+  //       setShowSuccessModal(true);
+  //     } else {
+  //       // If the status is not complete, check why. User may need to
+  //       // complete further steps.
+  //       setVerification({ ...verification, error: "Verification Failed", state: "failed" })
+  //     }
+  //   } catch (err: any) {
+  //     setVerification({ ...verification, error: err.message, state: "failed" })
+  //   }
+  // }
+  const handleRegister = async () => {
+    const { email, name, password, confirmPassword } = form
+
+    const emailValidation = Validate.email(email)
+    const passValidation = Validate.Password(password)
+
+    if (name && email && password && confirmPassword) {
+      if (emailValidation && passValidation) {
+        setErrorMessage('')
+        setIsLoading(true)
+        console.log(form);
+        try {
+          const res = await authenticationAPI.handleAuthentitation(
+            '/register',
+            {
+              name: form.name,
+              email: form.email,
+              password: form.password
+            },
+            'post'
+          )
+          console.log(res);
+          setIsLoading(false)
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false)
+        }
       } else {
-        // If the status is not complete, check why. User may need to
-        // complete further steps.
-        setVerification({ ...verification, error: "Verification Failed", state: "failed" })
+        setErrorMessage('Email không đúng!')
       }
-    } catch (err: any) {
-      setVerification({ ...verification, error: err.message, state: "failed" })
+    } else {
+      setErrorMessage('Vui lòng nhập đầy đủ thông tin')
     }
   }
+
 
 
   return (
@@ -142,8 +188,13 @@ const SignUp = () => {
               icon={icons.lock}
               value={form.confirmPassword}
               onChangeText={(value) => setForm({ ...form, confirmPassword: value })} />
-
-            <CustomButton title={'Sign Up'} onPress={onSignUpPress}
+            {
+              errorMessage && (
+                <View>
+                  <Text className='text-red-700 px-5'>{errorMessage}</Text>
+                </View>
+              )}
+            <CustomButton title={'Sign Up'} onPress={handleRegister}
               className='mt-6'></CustomButton>
 
             <Link href="/(auth)/sign-in" className='text-lg mt-10 text-center '>
@@ -173,7 +224,9 @@ const SignUp = () => {
               {/* /**Error message */}
               {verification.error && <Text className='text-red-500'>{verification.error}</Text>}
 
-              <CustomButton title={'Verify Email'} onPress={onVerifyPress} className='mt-5 bg-[#5c83e4]' />
+              <CustomButton title={'Verify Email'} onPress={() => {
+                console.log('test');
+              }} className='mt-5 bg-[#5c83e4]' />
             </View>
 
           </ReactNativeModal>
@@ -193,18 +246,20 @@ const SignUp = () => {
               <CustomButton
                 title={'Browse Sign In'}
                 onPress={async () => {
-                  await signOut(); 
+                  await signOut();
                   setShowSuccessModal(false);
-                  router.push('/(auth)/sign-in')}}
+                  router.push('/(auth)/sign-in')
+                }}
                 className='mt-5 bg-[#5c83e4]'
               />
-              
+
 
             </View>
           </ReactNativeModal>
 
         </View>
       </ScrollView>
+      <LoadingModal visible={isLoading} />
     </SafeAreaView>
 
   )

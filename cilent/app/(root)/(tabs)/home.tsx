@@ -25,10 +25,6 @@ const Page = () => {
 
   return (
     <SafeAreaView className='flex bg-gray-100 h-full'>
-      <LoadingModal 
-      
-      visible={true}
-      />
       <ScrollView>
 
 

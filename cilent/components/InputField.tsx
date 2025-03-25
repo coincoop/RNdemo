@@ -12,7 +12,7 @@ const InputField = ({ labelStyle, icon, secureTextEntry = false,
         <View className={`flex flex-row items-center relative bg-neutral-100 justify-start rounded-full border border-neutral-100 focus:border-primary-500 ${containerStyle}`}>
           {icon && <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />}
           <TextInput
-            className={`rounded-full p-4 font-[Poppins-Bold] text-[15px] flex-1 ${inputStyle} text-left`}
+            className={`rounded-full p-4 text-[15px] flex-1 ${inputStyle} text-left`}
             secureTextEntry={secureTextEntry}
             {...props}
           />

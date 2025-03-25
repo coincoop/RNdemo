@@ -1,7 +1,10 @@
 const express = require('express')
 const cor = require('cors')
-const authRouter = require('./router/authRouter')
+require('dotenv').config();
+const authRouter = require('./src/routers/authRouter')
+const connectDB = require('./src/configs/connectDb')
 const app = express()
+const {errorMiddleHandle} =require('./middlewares/errorMiddleware')
 
 const PORT =3001
 
@@ -9,6 +12,9 @@ app.use(cor())
 app.use(express.json())
 
 app.use('/auth', authRouter)
+
+connectDB();
+app.use(errorMiddleHandle)
 
 app.listen(PORT, (err)=>{
     if(err){
