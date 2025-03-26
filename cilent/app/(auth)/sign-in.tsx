@@ -6,48 +6,44 @@ import InputField from '@/components/InputField'
 import { icons } from '@/constants'
 import CustomButton from '@/components/CustomButton';
 import { Link, useRouter } from 'expo-router'
-import { useSignIn } from '@clerk/clerk-expo'
 
 
 
 const SignIn = () => {
-  
-
-  const { signIn, setActive, isLoaded } = useSignIn()
   const router = useRouter()
   const [form, setForm] = useState({
     email: '',
     password: '',
   })
 
-  const onSignInPress = useCallback(async () => {
-    if (!isLoaded) return
+  // const onSignInPress = useCallback(async () => {
+  //   if (!isLoaded) return
 
-    // Start the sign-in process using the email and password provided
-    try {
-      const signInAttempt = await signIn.create({
-        identifier: form.email,
-        password: form.password,
-      })
+  //   // Start the sign-in process using the email and password provided
+  //   try {
+  //     const signInAttempt = await signIn.create({
+  //       identifier: form.email,
+  //       password: form.password,
+  //     })
 
-      // If sign-in process is complete, set the created session as active
-      // and redirect the user
-      if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId })
-        router.replace("/(root)/(tabs)/home");
-      } else {
-        // If the status isn't complete, check why. User might need to
-        // complete further steps.
-        console.error(JSON.stringify(signInAttempt, null, 2))
-        Alert.alert("Error", "Log in failed. Please try again.");
-      }
-    } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
-      Alert.alert("Error", err.errors[0].longMessage);
-    }
-  }, [ isLoaded,form.password, form.email])
+  //     // If sign-in process is complete, set the created session as active
+  //     // and redirect the user
+  //     if (signInAttempt.status === 'complete') {
+  //       await setActive({ session: signInAttempt.createdSessionId })
+  //       router.replace("/(root)/(tabs)/home");
+  //     } else {
+  //       // If the status isn't complete, check why. User might need to
+  //       // complete further steps.
+  //       console.error(JSON.stringify(signInAttempt, null, 2))
+  //       Alert.alert("Error", "Log in failed. Please try again.");
+  //     }
+  //   } catch (err: any) {
+  //     // See https://clerk.com/docs/custom-flows/error-handling
+  //     // for more info on error handling
+  //     console.error(JSON.stringify(err, null, 2))
+  //     Alert.alert("Error", err.errors[0].longMessage);
+  //   }
+  // }, [ isLoaded,form.password, form.email])
 
   return (
     <SafeAreaView className=' bg-gray-100 h-full flex justify-between items-center'>
@@ -73,7 +69,8 @@ const SignIn = () => {
               value={form.password}
               onChangeText={(value) => setForm({ ...form, password: value })} />
 
-            <CustomButton title={'Log In'} className='mt-5' onPress={onSignInPress} />
+            <CustomButton title={'Log In'} className='mt-5' onPress={()=>{console.log('me m');
+            }} />
           </View>
           <Link href="/(auth)/sign-up" className='text-lg mt-10 text-center '>
             Don't have an account?
@@ -87,7 +84,3 @@ const SignIn = () => {
 }
 
 export default SignIn
-
-function useCallBack(arg0: () => Promise<void>, arg1: (string | boolean)[]) {
-  throw new Error('Function not implemented.')
-}

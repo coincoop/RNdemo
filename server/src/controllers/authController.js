@@ -36,7 +36,9 @@ const register = asyncHandle(async (req, res) => {
   res.status(200).json({
     mess: "Register tạo mới thành công user!",
     data: {
-        ...newUser,
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
         accessToken: await getJWT(email, newUser.id),
     },
   });

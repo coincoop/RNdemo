@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
+
 import { Link, router } from 'expo-router'
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useAuth } from "@clerk/clerk-expo";
@@ -10,33 +10,19 @@ import search from './search';
 import SearchField from '@/components/SearchField';
 import { FeaturedCard, Card } from '@/components/Card'
 import LoadingModal from '@/components/LoadingModal';
+import { useDispatch } from 'react-redux';
+import { removeAuth } from '@/redux/reducers/authReducer';
 
 
 const Page = () => {
-  const { user } = useUser()
-  const { signOut } = useAuth();
-
-  const cardData = [
-    { id: '1', type: 'featured' },
-    { id: '2', type: 'featured' },
-    { id: '3', type: 'card' },
-    { id: '4', type: 'card' },
-  ];
-
+  const dispatch = useDispatch()
   return (
     <SafeAreaView className='flex bg-gray-100 h-full'>
       <ScrollView>
-
-
-        {/* <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-        <Link href="/(auth)/sign-in" onPress={async () => {
-          await signOut(); // Đăng xuất user cũ
-          console.log("Signed out!")
-        }}>
+ 
+        <Link href="/(auth)/sign-in" onPress={()=>dispatch(removeAuth({}))}>
           <Text>Sign out</Text>
         </Link>
-      </SignedIn> */}
         {/* titile */}
         <View className='px-5 mt-5'>
           <Text className='font-[Poppins]'>

@@ -13,13 +13,20 @@ import { fetchAPI } from '@/lib/fetch'
 import LoadingModal from '@/components/LoadingModal'
 import authenticationAPI from '@/apis/authApi'
 import { Validate } from '@/utils/validate'
+import { useDispatch, useSelector } from 'react-redux'
+import { addAuth, authReducer, authSelector } from '@/redux/reducers/authReducer'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const SignUp = () => {
-  const { signOut } = useAuth();
   const [isLoading, setIsLoading] = useState(false)
-  const { isLoaded, signUp } = useSignUp()
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  
+  //test
+    const auth =useSelector(authSelector)
+  //
+
   const router = useRouter()
+  const dispatch = useDispatch()
   const [errorMessage, setErrorMessage] = useState('')
   const [verification, setVerification] = React.useState({
     state: "default",
@@ -117,7 +124,6 @@ const SignUp = () => {
       if (emailValidation && passValidation) {
         setErrorMessage('')
         setIsLoading(true)
-        console.log(form);
         try {
           const res = await authenticationAPI.handleAuthentitation(
             '/register',
@@ -128,8 +134,14 @@ const SignUp = () => {
             },
             'post'
           )
-          console.log(res);
+
+          //todo chuyển sang sign in
+          dispatch(addAuth(res.data))
+          await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+          console.log(auth);
+          
           setIsLoading(false)
+          router.push('/');
         } catch (error) {
           console.log(error);
           setIsLoading(false)
@@ -246,7 +258,6 @@ const SignUp = () => {
               <CustomButton
                 title={'Browse Sign In'}
                 onPress={async () => {
-                  await signOut();
                   setShowSuccessModal(false);
                   router.push('/(auth)/sign-in')
                 }}
