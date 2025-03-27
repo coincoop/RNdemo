@@ -1,16 +1,22 @@
 import { View, Text, Image, Alert } from 'react-native'
-import React, { useCallback,useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 import InputField from '@/components/InputField'
 import { icons } from '@/constants'
 import CustomButton from '@/components/CustomButton';
-import { Link, useRouter } from 'expo-router'
+import { Link, router, useRouter } from 'expo-router'
+import authenticationAPI from '@/apis/authApi'
+import { Validate } from '@/utils/validate'
+import { useDispatch } from 'react-redux'
+import { addAuth } from '@/redux/reducers/authReducer'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
 const SignIn = () => {
-  const router = useRouter()
+  const dispatch = useDispatch()
+  const [errorMessage, setErrorMessage] = useState('')
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -45,6 +51,36 @@ const SignIn = () => {
   //   }
   // }, [ isLoaded,form.password, form.email])
 
+  useEffect(() => {
+    if (form.email || form.password) {
+      setErrorMessage('')
+    }
+  }, [form.email, form.password])
+
+  const handleLogin = async () => {
+
+    const emailValidation = Validate.email(form.email)
+    if (emailValidation) {
+      try {
+        const res = await authenticationAPI.handleAuthentitation('/login', {
+          email: form.email,
+          password: form.password
+        },
+          'post',
+        )
+        dispatch(addAuth(res.data))
+        await AsyncStorage.setItem('auth',JSON.stringify(res.data))
+        router.push('/');
+      } catch (error) {
+        console.log(error);
+
+      }
+    } else {
+      setErrorMessage('Sai định dạng email')
+    }
+
+  }
+
   return (
     <SafeAreaView className=' bg-gray-100 h-full flex justify-between items-center'>
 
@@ -68,9 +104,13 @@ const SignIn = () => {
               icon={icons.lock}
               value={form.password}
               onChangeText={(value) => setForm({ ...form, password: value })} />
+            {errorMessage && (
+              <View>
+                <Text className='text-red-700 px-5'>{errorMessage}</Text>
+              </View>
+            )}
 
-            <CustomButton title={'Log In'} className='mt-5' onPress={()=>{console.log('me m');
-            }} />
+            <CustomButton title={'Log In'} className='mt-5' onPress={handleLogin} />
           </View>
           <Link href="/(auth)/sign-up" className='text-lg mt-10 text-center '>
             Don't have an account?
@@ -83,4 +123,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default SignIn;

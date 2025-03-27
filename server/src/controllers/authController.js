@@ -1,18 +1,19 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const asyncHandle = require("express-async-handler");
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
-const getJWT = async (email,id )=>{
-    const payload={
-        email, id
-    };
-    const token = jwt.sign(payload, process.env.SECRET_KEY,{
-        expiresIn: '7d',
-    });
+const getJWT = async (email, id) => {
+  const payload = {
+    email,
+    id,
+  };
+  const token = jwt.sign(payload, process.env.SECRET_KEY, {
+    expiresIn: "7d",
+  });
 
-    return token;
-}
+  return token;
+};
 
 const register = asyncHandle(async (req, res) => {
   const { email, name, password } = req.body;
@@ -36,14 +37,40 @@ const register = asyncHandle(async (req, res) => {
   res.status(200).json({
     mess: "Register tạo mới thành công user!",
     data: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        accessToken: await getJWT(email, newUser.id),
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      accessToken: await getJWT(email, newUser.id),
     },
   });
 });
 
+const login = asyncHandle(async (req, res) => {
+  const { email, password } = req.body;
+  const existingUser = await UserModel.findOne({ email });
+ 
+  if(!existingUser){
+    res.status(403)
+    throw new Error(`User không tồn tại!`);
+  }
+  const isMatchPassword= await bcrypt.compare(password, existingUser.password)
+
+  if(!isMatchPassword){
+    res.status(401)
+    throw new Error(`Email hoặc mật khẩu sai!`)
+  }
+  
+  res.status(200).json({
+    message: 'Đăng nhập thành công',
+    data: {
+      id: existingUser.id,
+      email: existingUser.email,
+      accessToken: await getJWT(email, existingUser.id)
+    }
+  })
+});
+
 module.exports = {
   register,
+  login,
 };

@@ -1,26 +1,45 @@
 
 import { Link, router } from 'expo-router'
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { useAuth } from "@clerk/clerk-expo";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import InputField from '@/components/InputField';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { icons } from '@/constants';
 import search from './search';
 import SearchField from '@/components/SearchField';
 import { FeaturedCard, Card } from '@/components/Card'
-import LoadingModal from '@/components/LoadingModal';
-import { useDispatch } from 'react-redux';
-import { removeAuth } from '@/redux/reducers/authReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { authSelector, removeAuth } from '@/redux/reducers/authReducer';
+import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 
 const Page = () => {
+  const auth = useSelector(authSelector)
   const dispatch = useDispatch()
+  
+
+  useEffect(() => {
+
+    //fix lỗi gì gì đó cũng  ko biết nữa
+    const checkAccessToken = async () => {
+      try {
+        if (auth.accessToken) {
+          console.log(auth.accessToken);
+          router.push('/')
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      checkAccessToken()
+    };
+  }, []);
   return (
     <SafeAreaView className='flex bg-gray-100 h-full'>
       <ScrollView>
- 
-        <Link href="/(auth)/sign-in" onPress={()=>dispatch(removeAuth({}))}>
+        <Text>{auth.email}</Text>
+        <Link href="/(auth)/sign-in" onPress={async () => {
+          await AsyncStorage.setItem('auth', auth.email)
+          dispatch(removeAuth())
+        }}>
           <Text>Sign out</Text>
         </Link>
         {/* titile */}

@@ -11,8 +11,7 @@ import { Slot } from 'expo-router'
 import { tokenCache } from '@/lib/auth'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider } from 'react-redux';
-import store from '@/redux/store';
-
+import { store } from '@/redux/store';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -39,6 +38,7 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
+      
       <Stack>
         <Stack.Screen name="(root)" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />

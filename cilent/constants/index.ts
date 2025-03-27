@@ -15,6 +15,7 @@ import house1 from "@/assets/images/japan.png"
 import location from "@/assets/icons/location.png"
 import house2 from "@/assets/images/new-york.png"
 import next from "@/assets/icons/right-arrow.png"
+import splash from "@/assets/images/splash.png"
 
 export const icons = {
     person,
@@ -29,6 +30,7 @@ export const icons = {
     filter,
     location,
     next,
+    
 }
 
 export const images = {
@@ -36,6 +38,7 @@ export const images = {
     check1,
     house1,
     house2,
+    splash,
 }
 
 export const onboarding =[

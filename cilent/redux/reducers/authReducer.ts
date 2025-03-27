@@ -21,8 +21,11 @@ const authSlice = createSlice({
         addAuth: (state, action)=>{
             state.authData = action.payload
         },
-        removeAuth:(state, action)=>{
-            state.authData = initialState
+        removeAuth:(state)=>{
+            // state.authData = initialState
+            state.authData.id = ''
+            state.authData.email =''
+            state.authData.accessToken= ''
         },
     },
 })
@@ -30,4 +33,4 @@ const authSlice = createSlice({
 export const authReducer = authSlice.reducer
 export const {addAuth, removeAuth} = authSlice.actions
 
-export const authSelector = (state: any ) =>state.authReducer.authData
+export const authSelector = (state: any ) => state.authReducer.authData

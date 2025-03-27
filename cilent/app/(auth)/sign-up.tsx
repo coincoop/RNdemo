@@ -20,11 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
-  
-  //test
-    const auth =useSelector(authSelector)
-  //
-
   const router = useRouter()
   const dispatch = useDispatch()
   const [errorMessage, setErrorMessage] = useState('')
@@ -134,12 +129,8 @@ const SignUp = () => {
             },
             'post'
           )
-
-          //todo chuyển sang sign in
           dispatch(addAuth(res.data))
           await AsyncStorage.setItem('auth', JSON.stringify(res.data))
-          console.log(auth);
-          
           setIsLoading(false)
           router.push('/');
         } catch (error) {
@@ -200,12 +191,11 @@ const SignUp = () => {
               icon={icons.lock}
               value={form.confirmPassword}
               onChangeText={(value) => setForm({ ...form, confirmPassword: value })} />
-            {
-              errorMessage && (
-                <View>
-                  <Text className='text-red-700 px-5'>{errorMessage}</Text>
-                </View>
-              )}
+            {errorMessage && (
+              <View>
+                <Text className='text-red-700 px-5'>{errorMessage}</Text>
+              </View>
+            )}
             <CustomButton title={'Sign Up'} onPress={handleRegister}
               className='mt-6'></CustomButton>
 
