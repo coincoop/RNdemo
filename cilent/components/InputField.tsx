@@ -4,7 +4,7 @@ import { InputFieldProps } from "@/types/type";
 
 
 const InputField = ({ labelStyle, icon, secureTextEntry = false,
-  containerStyle, inputStyle, iconStyle, className, ...props
+  containerStyle, inputStyle, iconStyle, className,onEnd, ...props
 }: InputFieldProps) => (
   <KeyboardAvoidingView>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -14,6 +14,7 @@ const InputField = ({ labelStyle, icon, secureTextEntry = false,
           <TextInput
             className={`rounded-full p-4 text-[15px] flex-1 ${inputStyle} text-left`}
             secureTextEntry={secureTextEntry}
+            onEndEditing={onEnd}
             {...props}
           />
         </View>

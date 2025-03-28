@@ -84,7 +84,7 @@ const SignIn = () => {
   return (
     <SafeAreaView className=' bg-gray-100 h-full flex justify-between items-center'>
 
-      <ScrollView className='my-[200px] rounded-[40px] flex-1 bg-white w-[90%] '>
+      <ScrollView showsVerticalScrollIndicator={false} className='my-[200px] rounded-[40px] flex-1 bg-white w-[90%] '>
         <View className='mt-20 flex-1 bg-white h-[80%]'>
           <View className=' justify-between items-center text-2xl text-black font-[Poppins-Bold]  mb-8'>
             <Text className='text-2xl text-[#5c83e4] font-bold'>Create Your Accout </Text>

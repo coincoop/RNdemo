@@ -1,14 +1,5 @@
 import {TextInputProps, TouchableOpacityProps} from "react-native";
 
-declare interface Driver {
-    driver_id: number;
-    first_name: string;
-    last_name: string;
-    profile_image_url: string;
-    car_image_url: string;
-    car_seats: number;
-    rating: number;
-}
 
 declare interface MarkerData {
     latitude: number;
@@ -60,6 +51,7 @@ declare interface ButtonProps extends TouchableOpacityProps {
     IconLeft?: React.ComponentType<any>;
     IconRight?: React.ComponentType<any>;
     className?: string;
+    disable?: boolean
 }
 
 declare interface GoogleInputProps {
@@ -86,6 +78,7 @@ declare interface InputFieldProps extends TextInputProps {
     inputStyle?: string;
     iconStyle?: string;
     className?: string;
+    onEnd?: () => void;
 }
 
 declare interface PaymentProps {
@@ -140,4 +133,11 @@ declare interface DriverCardProps {
 declare interface LoadingModalProps{
     visible: boolean,
     mess?: string,
+}
+
+declare interface ErrorMessages{
+    email: string
+    password: string,
+    name: string,
+    confirmPassword: string,
 }

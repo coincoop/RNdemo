@@ -10,30 +10,40 @@ const index = () => {
   const [isShowSplash, setIsShowSplash] = useState(true);
   const [isRegister, setIsRegister] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { getItem } = useAsyncStorage('auth');
+  
   const dispatch = useDispatch()
   const auth = useSelector(authSelector)
 
   useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const res = await getItem();
-        if (res) {
-          res && dispatch(addAuth(JSON.parse(res)))
-        }
-      } catch (error) {
-        console.error(error);
-      }
-      setIsRegister(true)
-      setIsLoading(false);
-    };
+
+    //dùng để clear cái email
+    const resetStorage = async () => {
+      await AsyncStorage.removeItem("auth");
+      console.log("Đã xóa dữ liệu cũ trong AsyncStorage!");
+    }
+    //
+    // resetStorage()
+    //
+    
     checkLogin()
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
     }, 1500);
-
+    
     return () => clearTimeout(timeout);
-  }, []);
+  }, [auth.email]);
+  const checkLogin = async () => {
+    const  resAsync = await  AsyncStorage.getItem('auth');
+    
+    try {
+      resAsync && dispatch(addAuth(JSON.parse(resAsync)));
+    } catch (error) {
+      console.error(`lỗi ở index ${error}`);
+    }
+    // console.log('lấy từ redux 1', auth);
+    setIsRegister(!!auth.email)
+    setIsLoading(false);
+  };
 
   return (
     <>

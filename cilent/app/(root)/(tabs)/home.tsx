@@ -22,7 +22,7 @@ const Page = () => {
     //fix lỗi gì gì đó cũng  ko biết nữa
     const checkAccessToken = async () => {
       try {
-        if (auth.accessToken) {
+        if (auth.accessToken==null) {
           console.log(auth.accessToken);
           router.push('/')
         }
@@ -31,13 +31,13 @@ const Page = () => {
       }
       checkAccessToken()
     };
-  }, []);
+  }, [auth.accessToken]);
   return (
     <SafeAreaView className='flex bg-gray-100 h-full'>
       <ScrollView>
         <Text>{auth.email}</Text>
         <Link href="/(auth)/sign-in" onPress={async () => {
-          await AsyncStorage.setItem('auth', auth.email)
+          await AsyncStorage.setItem("auth", JSON.stringify({ email: auth.email }));
           dispatch(removeAuth())
         }}>
           <Text>Sign out</Text>

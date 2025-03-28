@@ -16,17 +16,21 @@ import { Validate } from '@/utils/validate'
 import { useDispatch, useSelector } from 'react-redux'
 import { addAuth, authReducer, authSelector } from '@/redux/reducers/authReducer'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ErrorMessages } from "@/types/type";
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [codeVerification, setCodeVerification] = useState('')
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [isDisable, setIsDisable] = useState(true)
   const router = useRouter()
   const dispatch = useDispatch()
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState<any>()
   const [verification, setVerification] = React.useState({
     state: "default",
     error: "",
     code: "",
+
   })
 
   const [form, setForm] = useState({
@@ -36,121 +40,116 @@ const SignUp = () => {
     confirmPassword: ''
   })
 
-  useEffect(() => {
-    if (form.name || form.email || form.password) {
-      setErrorMessage('')
+  useEffect(()=>{
+    if(!errorMessage || errorMessage && (errorMessage.email || errorMessage.name || errorMessage.password || errorMessage.confirmPassword || !form.name || !form.email || !form.password || !form.confirmPassword)){
+      setIsDisable(true)
+    }else{
+      setIsDisable(false)
     }
-  }, [form.name, form.email, form.password])
 
-  // clerk  // Handle submission of sign-up form
-  // const onSignUpPress = async () => {
-  //   if (!isLoaded) return
-  //   if (form.password !== form.confirmPassword) {
-  //     Alert.alert('Error', 'Passwords do not match');
-  //     return;
-  //   }
 
-  //   // Start sign-up process using email and password provided
-  //   try {
-  //     await signUp.create({
-  //       emailAddress: form.email,
-  //       password: form.password,
-  //     })
+  },[errorMessage])
 
-  //     // Send user an email with verification code
-  //     await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-
-  //     // and capture OTP code
-  //     setVerification({
-  //       ...verification,
-  //       state: 'pending',
-  //     })
-  //   } catch (err: any) {
-  //     // See https://clerk.com/docs/custom-flows/error-handling
-  //     // for more info on error handling
-  //     console.log(JSON.stringify(err, null, 2));
-  //     Alert.alert("Error", err.errors[0].longMessage);
-
-  //   }
-  // }
-
-  // // Handle submission of verification form
-  // const onVerifyPress = async () => {
-  //   if (!isLoaded) return
-
-  //   try {
-  //     // Use the code the user provided to attempt verification
-  //     const signUpAttempt = await signUp.attemptEmailAddressVerification({
-  //       code: verification.code,
-  //     })
-
-  //     // If verification was completed, set the session to active
-  //     if (signUpAttempt.status === 'complete') {
-  //       //TODO create a db user
-  //       await fetchAPI("/(api)/user",{
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //           name: form.name,
-  //           email: form.email,
-  //           clerkId: signUpAttempt.createdUserId
-  //         })
-  //       })
-
-  //       // await setActive({ session: signUpAttempt.createdSessionId })
-
-  //       setVerification({ ...verification, state: "success" })
-  //       setShowSuccessModal(true);
-  //     } else {
-  //       // If the status is not complete, check why. User may need to
-  //       // complete further steps.
-  //       setVerification({ ...verification, error: "Verification Failed", state: "failed" })
-  //     }
-  //   } catch (err: any) {
-  //     setVerification({ ...verification, error: err.message, state: "failed" })
-  //   }
-  // }
+  //đăng kí
   const handleRegister = async () => {
-    const { email, name, password, confirmPassword } = form
-
-    const emailValidation = Validate.email(email)
-    const passValidation = Validate.Password(password)
-
-    if (name && email && password && confirmPassword) {
-      if (emailValidation && passValidation) {
-        setErrorMessage('')
-        setIsLoading(true)
-        try {
-          const res = await authenticationAPI.handleAuthentitation(
-            '/register',
-            {
-              name: form.name,
-              email: form.email,
-              password: form.password
-            },
-            'post'
-          )
-          dispatch(addAuth(res.data))
-          await AsyncStorage.setItem('auth', JSON.stringify(res.data))
-          setIsLoading(false)
-          router.push('/');
-        } catch (error) {
-          console.log(error);
-          setIsLoading(false)
-        }
-      } else {
-        setErrorMessage('Email không đúng!')
-      }
-    } else {
-      setErrorMessage('Vui lòng nhập đầy đủ thông tin')
+    setIsLoading(true)
+    const api = '/verification'
+    try {
+      const res = await authenticationAPI.handleAuthentitation(api, {email: form.email}, 'post')
+      setVerification({
+        ...verification,
+        state: "pending",
+      });
+      setCodeVerification(res.data.code)
+      console.log(res);
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error);
+      
     }
   }
 
+  //xác nhận mã 
+  const handleVerification = async()=>{
+    setIsLoading(true)
+    if(verification.code == codeVerification){
+      try {
+        const res = await authenticationAPI.handleAuthentitation('/register',{name : form.name, email: form.email, password: form.password}, 'post')
+        dispatch(addAuth(res.data))
+        await AsyncStorage.setItem('auth', JSON.stringify(res.data))
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+        
+      }
+      setVerification({
+        ...verification,
+        state: "success",
+      });
+      setIsLoading(false)
+    }else{
+      setVerification({
+        ...verification,
+        error: "Nhập sai mã xác nhận",
+      });
+      setIsLoading(false)
+    }
+  }
+
+  //validation form
+  const formValidation = (key: string) => {
+    const data = { ...errorMessage }
+    let message = ``
+
+    switch (key) {
+      case 'email':
+        if (!form.email) {
+          message = `Yêu cầu nhập email`
+        } else if (!Validate.email(form.email)) {
+          message = `Email không hợp lệ`
+        } else {
+          message = ``
+        }
+        break
+      case 'password':
+        if (!form.password) {
+          message = `Yêu cầu nhập mật khẩu`
+        }
+        else {
+          message = ``
+        }
+        break
+      case 'name':
+        if (!form.name) {
+          message = `Yêu cầu nhập tên người dùng`
+        }
+        else {
+          message = ``
+        }
+        break
+      case 'confirmPassword':
+        if (!form.confirmPassword) {
+          message = `Yêu cầu nhập lại mật khẩu`
+        } else if (form.password !== form.confirmPassword) {
+          message = `Mật khẩu không giống nhau`
+        }
+        else {
+          message = ``
+        }
+        break
+    }
+    data[`${key}`] = message
+    setErrorMessage(data)
+  }
 
 
   return (
     <SafeAreaView className=' bg-gray-100 h-full flex justify-between items-center'>
 
-      <ScrollView className='my-40 rounded-[40px] flex-1 bg-white w-[90%] '>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className='my-40 rounded-[40px] flex-1 bg-white w-[90%] '
+      >
         <View className='mt-10 flex-1 bg-white h-[80%]'>
           <View className=' justify-between items-center text-2xl text-black font-[Poppins-Bold]  mb-8'>
             <Text className='text-2xl text-[#5c83e4] font-bold'>Create Your Accout </Text>
@@ -164,15 +163,18 @@ const SignUp = () => {
               placeholder="Name"
               icon={icons.person}
               value={form.name}
-              onChangeText={(value) => setForm({ ...form, name: value })} />
-
+              onChangeText={(value) => setForm({ ...form, name: value })}
+              onEnd={() => formValidation('name')}
+            />
             {/* Input email */}
             <InputField
               labelStyle={undefined}
               placeholder="Email"
               icon={icons.email}
               value={form.email}
-              onChangeText={(value) => setForm({ ...form, email: value })} />
+              onChangeText={(value) => setForm({ ...form, email: value })}
+              onEnd={() => formValidation('email')}
+            />
 
             {/* Input password */}
             <InputField
@@ -181,7 +183,9 @@ const SignUp = () => {
               secureTextEntry={true}
               icon={icons.lock}
               value={form.password}
-              onChangeText={(value) => setForm({ ...form, password: value })} />
+              onChangeText={(value) => setForm({ ...form, password: value })}
+              onEnd={() => formValidation('password')}
+            />
 
             {/* Input confirm password */}
             <InputField
@@ -190,14 +194,29 @@ const SignUp = () => {
               secureTextEntry={true}
               icon={icons.lock}
               value={form.confirmPassword}
-              onChangeText={(value) => setForm({ ...form, confirmPassword: value })} />
+              onChangeText={(value) => setForm({ ...form, confirmPassword: value })}
+              onEnd={() => formValidation('confirmPassword')}
+            />
             {errorMessage && (
               <View>
-                <Text className='text-red-700 px-5'>{errorMessage}</Text>
+                {Object.keys(errorMessage).map((error, index) => (
+                  errorMessage[`${error}`] && (
+                    <Text
+                      key={`error${index}`}
+                      className='text-red-700 px-5'
+                    >
+                      {errorMessage[`${error}`]}
+                    </Text>
+                  )
+                ))}
               </View>
             )}
-            <CustomButton title={'Sign Up'} onPress={handleRegister}
-              className='mt-6'></CustomButton>
+            <CustomButton
+              title={'Sign Up'}
+              onPress={handleRegister}
+              className='mt-6'
+              disable={isDisable}
+            />
 
             <Link href="/(auth)/sign-in" className='text-lg mt-10 text-center '>
               Already have an account?
@@ -227,7 +246,7 @@ const SignUp = () => {
               {verification.error && <Text className='text-red-500'>{verification.error}</Text>}
 
               <CustomButton title={'Verify Email'} onPress={() => {
-                console.log('test');
+                handleVerification();
               }} className='mt-5 bg-[#5c83e4]' />
             </View>
 
@@ -241,15 +260,15 @@ const SignUp = () => {
                 Congratulations!
               </Text>
               <Text className='text-base px-5 text-center text-gray-400 font-[Poppins] mt-2'>
-                Your account has been created successfully. Please sign in now
+                Your account has been created successfully.
               </Text>
 
               {/* Browse to sign in */}
               <CustomButton
-                title={'Browse Sign In'}
+                title={'Browse to Main'}
                 onPress={async () => {
                   setShowSuccessModal(false);
-                  router.push('/(auth)/sign-in')
+                  router.push('/')
                 }}
                 className='mt-5 bg-[#5c83e4]'
               />
