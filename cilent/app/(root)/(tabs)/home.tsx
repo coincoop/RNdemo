@@ -4,7 +4,9 @@ import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import { icons } from '@/constants';
+import { Colors } from '@/constants/Colors';
 import search from './search';
+
 import SearchField from '@/components/SearchField';
 import { FeaturedCard, Card } from '@/components/Card'
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +34,9 @@ const Page = () => {
       checkAccessToken()
     };
   }, [auth.accessToken]);
+  console.log('Màu sắc được sử dụng:', Colors.blue);
+  console.log(`text-[${Colors.blue}]`);
+
   return (
     <SafeAreaView className='flex bg-gray-100 h-full'>
       <ScrollView>
@@ -77,7 +82,7 @@ const Page = () => {
               Categories
             </Text>
             <TouchableOpacity className='ml-auto' >
-              <Text className='font-[Poppins] text-[#5c83e4]'>
+              <Text style={{color: Colors.blue}} className={`font-[Poppins]`}>
                 See all
               </Text>
             </TouchableOpacity>
