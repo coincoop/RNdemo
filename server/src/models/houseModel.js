@@ -1,6 +1,10 @@
 const { default: mongoose } = require("mongoose");
 
 const HouseSchema = new mongoose.Schema({
+  ower_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    require: true
+  },
   description: {
     type: String,
     require: true,
