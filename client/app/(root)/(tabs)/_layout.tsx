@@ -12,15 +12,16 @@ const TabIcon = ({ source, focused }: { source: ImageSourcePropType, focused: bo
                     source={source}
                     tintColor={`${focused ? '#ffffff' : '#c3c3c3'}`}
                     resizeMode='contain'
-                    className='w-7 h-7 absolute' 
+                    className='w-7 h-7 absolute'
                 />
             </View>
         </View>
     );
 }
 
-const Layout = () =>
-    <Tabs initialRouteName='home'
+const TabsLayout = () =>
+    <Tabs
+        initialRouteName='home'
         screenOptions={{
             tabBarActiveTintColor: 'white',
             tabBarInactiveTintColor: 'white',
@@ -85,4 +86,4 @@ const Layout = () =>
 
 
 
-export default Layout
+export default TabsLayout

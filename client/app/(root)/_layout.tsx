@@ -1,14 +1,22 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Stack } from 'expo-router'
-import "../../global.css"
+import React from 'react';
+import "../../global.css";
+import {Drawer} from "expo-router/drawer"
 
-const _layout = () => {
+
+const Layout = () => {
   return (
-    <Stack>
-    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-  </Stack>
-  )
-}
+    <Drawer screenOptions={{
+      headerShown: false
+    }}>
+        <Drawer.Screen
+          name="(tabs)"
+          options={{
+            drawerLabel: "Home",
+            title: "Home"
+          }}
+        />
+    </Drawer>
+  );
+};
 
-export default _layout
+export default Layout;

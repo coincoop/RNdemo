@@ -12,11 +12,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authSelector, removeAuth } from '@/redux/reducers/authReducer';
 import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import Category from '@/components/Category';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerActions } from '@react-navigation/native'; 
 
 
-const Page = () => {
+const Home = () => {
   const auth = useSelector(authSelector)
   const dispatch = useDispatch()
+  const navigation = useNavigation();
 
   useEffect(() => {
 
@@ -41,7 +44,7 @@ const Page = () => {
       <ScrollView>
         {/** App bar  */}
         <View className='flex flex-row items-center justify-center h-20 px-5'>
-          <TouchableOpacity className='rounded-xl flex justify-center items-center bg-white w-10 h-10' >
+          <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} className='rounded-xl flex justify-center items-center bg-white w-10 h-10' >
             <Image
               source={icons.menu}
               resizeMode='contain'
@@ -132,4 +135,4 @@ const Page = () => {
     </SafeAreaView>
   )
 }
-export default Page
+export default Home
