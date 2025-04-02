@@ -16,6 +16,9 @@ import location from "@/assets/icons/location.png"
 import house2 from "@/assets/images/new-york.png"
 import next from "@/assets/icons/right-arrow.png"
 import splash from "@/assets/images/splash.png"
+import bell from "@/assets/icons/bell.png"
+import menu from "@/assets/icons/menu.png"
+import arrow_down from "@/assets/icons/arrow-down.png"
 
 export const icons = {
     person,
@@ -30,7 +33,9 @@ export const icons = {
     filter,
     location,
     next,
-    
+    bell,
+    menu,
+    arrow_down
 }
 
 export const images = {

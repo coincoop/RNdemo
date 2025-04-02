@@ -141,3 +141,8 @@ declare interface ErrorMessages{
     name: string,
     confirmPassword: string,
 }
+
+declare interface CategoryProps{
+    title: string,
+    onPress?: ()=> void
+}
