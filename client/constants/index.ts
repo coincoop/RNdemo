@@ -19,6 +19,13 @@ import splash from "@/assets/images/splash.png"
 import bell from "@/assets/icons/bell.png"
 import menu from "@/assets/icons/menu.png"
 import arrow_down from "@/assets/icons/arrow-down.png"
+import avatar from '@/assets/images/avatar.png'
+import logout from '@/assets/icons/logout.png'
+import heart from '@/assets/icons/heart.png'
+import setting from '@/assets/icons/settings.png'
+import terms from '@/assets/icons/terms-info.png'
+import activities from '@/assets/icons/time-past.png'
+import customer from '@/assets/icons/user-headset.png'
 
 export const icons = {
     person,
@@ -35,7 +42,13 @@ export const icons = {
     next,
     bell,
     menu,
-    arrow_down
+    arrow_down,
+    logout,
+    heart,
+    setting,
+    terms,
+    activities,
+    customer,
 }
 
 export const images = {
@@ -44,6 +57,7 @@ export const images = {
     house1,
     house2,
     splash,
+    avatar,
 }
 
 export const onboarding =[

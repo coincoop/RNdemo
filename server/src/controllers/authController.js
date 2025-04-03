@@ -48,6 +48,7 @@ const register = asyncHandle(async (req, res) => {
   res.status(200).json({
     mess: "Register tạo mới thành công user!",
     data: {
+      name: newUser.name,
       id: newUser.id,
       email: newUser.email,
       accessToken: await getJWT(email, newUser.id),
@@ -73,6 +74,7 @@ const login = asyncHandle(async (req, res) => {
   res.status(200).json({
     message: "Đăng nhập thành công",
     data: {
+      name: existingUser.name,
       id: existingUser.id,
       email: existingUser.email,
       accessToken: await getJWT(email, existingUser.id),

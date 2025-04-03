@@ -1,148 +1,181 @@
-import {TextInputProps, TouchableOpacityProps} from "react-native";
-
+import {
+  ImageSourcePropType,
+  TextInputProps,
+  TouchableOpacityProps,
+} from "react-native";
 
 declare interface MarkerData {
-    latitude: number;
-    longitude: number;
-    id: number;
-    title: string;
-    profile_image_url: string;
-    car_image_url: string;
-    car_seats: number;
-    rating: number;
-    first_name: string;
-    last_name: string;
-    time?: number;
-    price?: string;
+  latitude: number;
+  longitude: number;
+  id: number;
+  title: string;
+  profile_image_url: string;
+  car_image_url: string;
+  car_seats: number;
+  rating: number;
+  first_name: string;
+  last_name: string;
+  time?: number;
+  price?: string;
 }
 
 declare interface MapProps {
-    destinationLatitude?: number;
-    destinationLongitude?: number;
-    onDriverTimesCalculated?: (driversWithTimes: MarkerData[]) => void;
-    selectedDriver?: number | null;
-    onMapReady?: () => void;
+  destinationLatitude?: number;
+  destinationLongitude?: number;
+  onDriverTimesCalculated?: (driversWithTimes: MarkerData[]) => void;
+  selectedDriver?: number | null;
+  onMapReady?: () => void;
 }
 
 declare interface Ride {
-    origin_address: string;
-    destination_address: string;
-    origin_latitude: number;
-    origin_longitude: number;
-    destination_latitude: number;
-    destination_longitude: number;
-    ride_time: number;
-    fare_price: number;
-    payment_status: string;
-    driver_id: number;
-    user_email: string;
-    created_at: string;
-    driver: {
-        first_name: string;
-        last_name: string;
-        car_seats: number;
-    };
+  origin_address: string;
+  destination_address: string;
+  origin_latitude: number;
+  origin_longitude: number;
+  destination_latitude: number;
+  destination_longitude: number;
+  ride_time: number;
+  fare_price: number;
+  payment_status: string;
+  driver_id: number;
+  user_email: string;
+  created_at: string;
+  driver: {
+    first_name: string;
+    last_name: string;
+    car_seats: number;
+  };
 }
 
 declare interface ButtonProps extends TouchableOpacityProps {
-    title: string;
-    bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
-    textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
-    IconLeft?: React.ComponentType<any>;
-    IconRight?: React.ComponentType<any>;
-    className?: string;
-    disable?: boolean
+  title: string;
+  bgVariant?: "primary" | "secondary" | "danger" | "outline" | "success";
+  textVariant?: "primary" | "default" | "secondary" | "danger" | "success";
+  IconLeft?: React.ComponentType<any>;
+  IconRight?: React.ComponentType<any>;
+  className?: string;
+  disable?: boolean;
 }
 
 declare interface GoogleInputProps {
-    icon?: string;
-    initialLocation?: string;
-    containerStyle?: string;
-    textInputBackgroundColor?: string;
-    handlePress: ({
-                      latitude,
-                      longitude,
-                      address,
-                  }: {
-        latitude: number;
-        longitude: number;
-        address: string;
-    }) => void;
+  icon?: string;
+  initialLocation?: string;
+  containerStyle?: string;
+  textInputBackgroundColor?: string;
+  handlePress: ({
+    latitude,
+    longitude,
+    address,
+  }: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
 }
 
 declare interface InputFieldProps extends TextInputProps {
-    icon?: any;
-    secureTextEntry?: boolean;
-    labelStyle?: string;
-    containerStyle?: string;
-    inputStyle?: string;
-    iconStyle?: string;
-    className?: string;
-    onEnd?: () => void;
+  icon?: any;
+  secureTextEntry?: boolean;
+  labelStyle?: string;
+  containerStyle?: string;
+  inputStyle?: string;
+  iconStyle?: string;
+  className?: string;
+  onEnd?: () => void;
 }
 
 declare interface PaymentProps {
-    fullName: string;
-    email: string;
-    amount: string;
-    driverId: number;
-    rideTime: number;
+  fullName: string;
+  email: string;
+  amount: string;
+  driverId: number;
+  rideTime: number;
 }
 
 declare interface LocationStore {
-    userLatitude: number | null;
-    userLongitude: number | null;
-    userAddress: string | null;
-    destinationLatitude: number | null;
-    destinationLongitude: number | null;
-    destinationAddress: string | null;
-    setUserLocation: ({
-                          latitude,
-                          longitude,
-                          address,
-                      }: {
-        latitude: number;
-        longitude: number;
-        address: string;
-    }) => void;
-    setDestinationLocation: ({
-                                 latitude,
-                                 longitude,
-                                 address,
-                             }: {
-        latitude: number;
-        longitude: number;
-        address: string;
-    }) => void;
+  userLatitude: number | null;
+  userLongitude: number | null;
+  userAddress: string | null;
+  destinationLatitude: number | null;
+  destinationLongitude: number | null;
+  destinationAddress: string | null;
+  setUserLocation: ({
+    latitude,
+    longitude,
+    address,
+  }: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
+  setDestinationLocation: ({
+    latitude,
+    longitude,
+    address,
+  }: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
 }
 
 declare interface DriverStore {
-    drivers: MarkerData[];
-    selectedDriver: number | null;
-    setSelectedDriver: (driverId: number) => void;
-    setDrivers: (drivers: MarkerData[]) => void;
-    clearSelectedDriver: () => void;
+  drivers: MarkerData[];
+  selectedDriver: number | null;
+  setSelectedDriver: (driverId: number) => void;
+  setDrivers: (drivers: MarkerData[]) => void;
+  clearSelectedDriver: () => void;
 }
 
 declare interface DriverCardProps {
-    item: MarkerData;
-    selected: number;
-    setSelected: () => void;
+  item: MarkerData;
+  selected: number;
+  setSelected: () => void;
 }
 
-declare interface LoadingModalProps{
-    visible: boolean,
-    mess?: string,
+declare interface LoadingModalProps {
+  visible: boolean;
+  mess?: string;
 }
 
-declare interface ErrorMessages{
-    email: string
-    password: string,
-    name: string,
-    confirmPassword: string,
+declare interface ErrorMessages {
+  email: string;
+  password: string;
+  name: string;
+  confirmPassword: string;
 }
 
-declare interface CategoryProps{
-    title: string,
-    onPress?: ()=> void
+declare interface CategoryProps {
+  title: string;
+  onPress?: () => void;
+}
+
+declare interface DrawerProps {
+  img_avatar: string;
+  name: string;
+}
+
+declare interface ProfileProps {
+  img_avatar: string;
+  name: string;
+}
+
+declare interface CardProps {
+  name?: string;
+  address?: string;
+  bed?: number;
+  bath?: number;
+  area?: number;
+  price?: number;
+  img?: ImageSourcePropType;
+  onPress: () => void;
+  data: string[{
+    name: string;
+    address: string;
+    bed: number;
+    bath: number;
+    area: number;
+    price: number;
+    img: ImageSourcePropType;
+  }];
 }

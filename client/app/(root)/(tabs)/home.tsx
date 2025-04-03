@@ -1,9 +1,9 @@
 
 import { Link, router } from 'expo-router'
-import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
-import { icons } from '@/constants';
+import { icons, images } from '@/constants';
 import { Colors } from '@/constants/Colors';
 import search from './search';
 import SearchField from '@/components/SearchField';
@@ -13,13 +13,78 @@ import { authSelector, removeAuth } from '@/redux/reducers/authReducer';
 import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import Category from '@/components/Category';
 import { useNavigation } from '@react-navigation/native';
-import { DrawerActions } from '@react-navigation/native'; 
+import { DrawerActions } from '@react-navigation/native';
 
 
 const Home = () => {
   const auth = useSelector(authSelector)
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const navigation = useNavigation();
+
+  const featuredProd = [
+    {
+      name: 'Villa Cottage',
+      address: '2715 Ash Dr.San Jose, NY',
+      bed: 3,
+      bath: 2,
+      area: 1200,
+      price: 300000,
+      img: images.house2,
+    },
+    {
+      name: 'Villa OKla',
+      address: '3030 Ash Dr.San Jose, WT',
+      bed: 3,
+      bath: 3,
+      area: 1500,
+      price: 350000,
+      img: images.house2,
+    },
+    {
+      name: 'Villa ConYM',
+      address: '4321 Ash Dr.San Jose, WT',
+      bed: 3,
+      bath: 3,
+      area: 1500,
+      price: 350000,
+      img: images.house2,
+    },
+    {
+      name: 'Villa CotMMBtage',
+      address: '3030 Ash Dr.San Jose, WT',
+      bed: 3,
+      bath: 3,
+      area: 1500,
+      price: 350000,
+      img: images.house2,
+    },
+  ]
+
+  const data = [
+    { type: 'appBar' },
+    { type: 'title' },
+    { type: 'search' },
+    { type: 'category', title: 'Featured Property' },
+    ...featuredProd.map((item) => ({ type: 'featuredCard', ...item })),
+    { type: 'category', title: 'Near You' },
+    { type: 'card' },
+    { type: 'card' },
+  ];
+
+  const DATA = [
+    {
+      title: 'Categories',
+      data: ['lo']
+    },
+    {
+      title: 'Featured Property',
+      data: ['lo']
+    },
+    {
+      title: 'Near you',
+      data: ['lo']
+    },
+  ];
 
   useEffect(() => {
 
@@ -36,12 +101,16 @@ const Home = () => {
       checkAccessToken()
     };
   }, [auth.accessToken]);
-  console.log('Màu sắc được sử dụng:', Colors.blue);
-  console.log(`text-[${Colors.blue}]`);
 
   return (
+
     <SafeAreaView style={{ backgroundColor: `${Colors.graylight}` }} className='flex h-full'>
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+
+      >
         {/** App bar  */}
         <View className='flex flex-row items-center justify-center h-20 px-5'>
           <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} className='rounded-xl flex justify-center items-center bg-white w-10 h-10' >
@@ -79,16 +148,6 @@ const Home = () => {
           </TouchableOpacity>
 
         </View>
-        {/* xóa sao này -- dùng để đăng xuất và hiển thị email  */}
-        <View>
-          <Text>{auth.email}</Text>
-          <Link href="/(auth)/sign-in" onPress={async () => {
-            await AsyncStorage.setItem("auth", JSON.stringify({ email: auth.email }));
-            dispatch(removeAuth())
-          }}>
-            <Text>Sign out</Text>
-          </Link>
-        </View>
         {/* titile */}
         <View className='px-5 mt-5'>
           <Text className='font-[Poppins]'>
@@ -119,9 +178,34 @@ const Home = () => {
         <Category title='Featured Property' onPress={() => console.log('Featured Property')
         } />
         {/* featured card */}
-        <View className='my-5 px-5 flex flex-row gap-5'>
-          <FeaturedCard />
-          <FeaturedCard />
+        <View className=' flex my-5 px-5'>
+          <FeaturedCard data={featuredProd}  onPress={()=> console.log('m m')
+          } />
+          {/* <FlatList
+            className='flex flex-row'
+            data={featuredProd}
+            numColumns={featuredProd.length}
+            nestedScrollEnabled={true}
+            columnWrapperClassName='gap-5'
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+
+              <FeaturedCard
+
+                onPress={() => console.log('heelo')}
+                name={item.name}
+                address={item.address}
+                bed={item.bed}
+                bath={item.bath}
+                area={item.area}
+                price={item.price}
+                img={item.img} />
+
+            )}
+
+          /> */}
+
+
         </View>
         {/* near you */}
         <Category title='Near You' onPress={() => console.log('hello')
