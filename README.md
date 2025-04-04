@@ -1,9 +1,13 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 Email: lenghaithuy@gmail.com
+
 BACKEND:
+
 <span style="color: red">Using mongoDb</span>
 
 **Install configs for Server**
+
 S1 : create configs folder, and configsDb inside configs folder
 <br>
 S2: Ctrl + V this into your configsDb -->
@@ -32,5 +36,7 @@ S2: Ctrl + V this into your configsDb -->
 
 **Setting your .env**
 SECRET_KEY: your secret key
+
 EMAIL: your email (send verification email to user)
+
 PASS_EMAIL: your app password, **https://support.google.com/mail/answer/185833?hl=en**
