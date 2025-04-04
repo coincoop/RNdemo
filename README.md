@@ -5,7 +5,7 @@ BACKEND:
 
 **Install configs for Server**
 S1 : create configs folder, and configsDb inside configs folder
-
+<br>
 S2: Ctrl + V this into your configsDb -->
 
 ```javascript
