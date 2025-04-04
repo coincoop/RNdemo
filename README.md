@@ -6,26 +6,27 @@ BACKEND:
 **Install configs for Server**
 S1 : create configs folder, and configsDb inside configs folder
 S2: Ctrl + V this into your configsDb -->
-{
-require('dotenv').config()
-const {mongoose, connect} = require('mongoose')
+```javascript
 
-const dbUrl = **Replace your connection string**
+    require('dotenv').config()
+    const {mongoose, connect} = require('mongoose')
 
-const connectDB = async()=>{
-try {
-const connection =await mongoose.connect(dbUrl)
-console.log(`Connect to mongodb successfully!!!`);
+    const dbUrl = **Replace your connection string**
 
-    } catch (error) {
-        console.log(error);
-        process.exit(1)
-    }
+    const connectDB = async()=>{
+    try {
+    const connection =await mongoose.connect(dbUrl)
+    console.log(`Connect to mongodb successfully!!!`);
+
+        } catch (error) {
+            console.log(error);
+            process.exit(1)
+        }
 
 }
-module.exports = connectDB
-}
+    module.exports = connectDB
 
+```
 **Setting your .env**
 SECRET_KEY: your secret key
 EMAIL: your email (send verification email to user)
