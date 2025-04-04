@@ -4,7 +4,7 @@ Email: lenghaithuy@gmail.com
 
 BACKEND:
 
-<span style="color: red">Using mongoDb</span>
+<span style="color: red;">Using mongoDb</span>
 
 **Install configs for Server**
 
@@ -35,6 +35,7 @@ S2: Ctrl + V this into your configsDb -->
 ```
 
 **Setting your .env**
+
 SECRET_KEY: your secret key
 
 EMAIL: your email (send verification email to user)
