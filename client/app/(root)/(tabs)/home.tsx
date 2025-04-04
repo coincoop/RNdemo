@@ -148,7 +148,7 @@ const Home = () => {
           <View className='px-5'>
             <Card
               data={item}
-              onPress={() => console.log('heelo')}
+              onPress={() => console.log('heeo')}
             />
           </View>
         )}

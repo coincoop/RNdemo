@@ -53,7 +53,7 @@ const FeaturedCard = ({ data, onPress }: CardProps) => {
 
 const Card = ({ data, onPress }: CardProps) => {
   return (
-    <TouchableOpacity className='flex w-full h-[130px] items-center justify-center rounded-3xl  bg-white'>
+    <TouchableOpacity onPress={onPress} className='flex w-full h-[130px] items-center justify-center rounded-3xl  bg-white'>
       <View className='flex flex-row '>
         {/* img */}
         <View className='flex items-center justify-center'>
