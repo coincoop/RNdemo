@@ -6,7 +6,7 @@ BACKEND:
 **Install configs for Server**
 S1 : create configs folder, and configsDb inside configs folder
 S2: Ctrl + V this into your configsDb -->
-<span style="color: green">
+{
 require('dotenv').config()
 const {mongoose, connect} = require('mongoose')
 
@@ -24,9 +24,9 @@ console.log(`Connect to mongodb successfully!!!`);
 
 }
 module.exports = connectDB
-</span>
+}
 
 **Setting your .env**
-SECRET_KEY: your secret key 
+SECRET_KEY: your secret key
 EMAIL: your email (send verification email to user)
 PASS_EMAIL: your app password, **https://support.google.com/mail/answer/185833?hl=en**
