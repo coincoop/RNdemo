@@ -5,7 +5,9 @@ BACKEND:
 
 **Install configs for Server**
 S1 : create configs folder, and configsDb inside configs folder
+
 S2: Ctrl + V this into your configsDb -->
+
 ```javascript
 
     require('dotenv').config()
@@ -23,10 +25,11 @@ S2: Ctrl + V this into your configsDb -->
             process.exit(1)
         }
 
-}
+    }
     module.exports = connectDB
 
 ```
+
 **Setting your .env**
 SECRET_KEY: your secret key
 EMAIL: your email (send verification email to user)
