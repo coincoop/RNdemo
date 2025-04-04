@@ -5,7 +5,7 @@ import { CategoryProps } from '@/types/type'
 
 const Category = ({title, onPress}:CategoryProps) => {
     return (
-        <View className='my-5 px-5'>
+        <View className='px-5'>
             <View className='flex flex-row items-center'>
                 <Text className='font-[Poppins-Bold] text-xl'>
                     {title}

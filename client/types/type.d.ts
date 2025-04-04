@@ -161,15 +161,7 @@ declare interface ProfileProps {
 }
 
 declare interface CardProps {
-  name?: string;
-  address?: string;
-  bed?: number;
-  bath?: number;
-  area?: number;
-  price?: number;
-  img?: ImageSourcePropType;
-  onPress: () => void;
-  data: string[{
+  data: {
     name: string;
     address: string;
     bed: number;
@@ -177,5 +169,6 @@ declare interface CardProps {
     area: number;
     price: number;
     img: ImageSourcePropType;
-  }];
+  };
+  onPress: () => void;
 }
